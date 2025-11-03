@@ -72,25 +72,23 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # Función principal
 def main():
     """Inicia el bot"""
-    # Obtener el token desde variable de entorno
     TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
     
     if not TOKEN:
         logger.error("ERROR: No se encontró el token. Configura la variable TELEGRAM_BOT_TOKEN")
         return
     
-    # Crear la aplicación
+    logger.info("Creando aplicación...")
     application = Application.builder().token(TOKEN).build()
     
-    # Agregar handlers
+    logger.info("Agregando handlers...")
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("ayuda", ayuda))
     application.add_handler(CommandHandler("estado", estado))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     
-    # Iniciar el bot
-    logger.info("🚀 Bot iniciado correctamente")
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    logger.info("🚀 Bot iniciado correctamente - Ejecutando polling")
+    application.run_polling(allowed_updates=Update.ALL_TYPES, drop_pending_updates=True)
 
 if __name__ == '__main__':
     main()
